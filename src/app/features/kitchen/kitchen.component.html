@@ -1,0 +1,32 @@
+<section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-black uppercase tracking-wide text-blue-600">Kitchen Board</p>
+      <h1 class="mt-2 text-4xl font-black tracking-tight text-slate-900">Live order workflow</h1>
+      <p class="mt-3 text-slate-500">Orders refresh every 15 seconds. Delivered orders leave this board and stay available in Admin order history.</p>
+    </div>
+    <button type="button" class="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-700 hover:bg-slate-50" (click)="load()">Refresh</button>
+  </div>
+
+  @if (loading()) {
+    <p class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-slate-500">Loading orders...</p>
+  } @else {
+    <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      @for (status of statuses; track status) {
+        <section class="min-h-96 rounded-3xl border border-slate-200 bg-slate-100/70 p-4">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-black text-slate-900">{{ status }}</h2>
+            <span class="rounded-full bg-white px-3 py-1 text-xs font-black text-slate-500">{{ ordersByStatus(status).length }}</span>
+          </div>
+          <div class="space-y-4 flex flex-col">
+            @for (order of ordersByStatus(status); track order.id) {
+              <app-order-card [order]="order" [currentUserRole]="auth.currentUser()?.role" [dishNames]="dishNames()" (statusChange)="updateStatus(order, $event)" (cancel)="cancel(order)" />
+            } @empty {
+              <p class="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm font-semibold text-slate-400">No {{ status }} orders</p>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
+</section>

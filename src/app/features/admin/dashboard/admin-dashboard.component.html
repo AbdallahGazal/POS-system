@@ -1,0 +1,22 @@
+<div>
+  <p class="text-sm font-black uppercase tracking-wide text-blue-600">Admin Panel</p>
+  <h1 class="mt-2 text-4xl font-black text-slate-900">Operations overview</h1>
+
+  @if (loading()) {
+    <p class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-slate-500">Loading dashboard...</p>
+  } @else {
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><p class="text-sm font-bold text-slate-500">Orders Today</p><p class="mt-2 text-4xl font-black text-slate-900">{{ todaysOrders() }}</p></article>
+      <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><p class="text-sm font-bold text-slate-500">Active Dishes</p><p class="mt-2 text-4xl font-black text-slate-900">{{ dishes().filter(dish => dish.active).length }}</p></article>
+      <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><p class="text-sm font-bold text-slate-500">Active Categories</p><p class="mt-2 text-4xl font-black text-slate-900">{{ categories().filter(category => category.active).length }}</p></article>
+      <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><p class="text-sm font-bold text-slate-500">Users</p><p class="mt-2 text-4xl font-black text-slate-900">{{ users().length }}</p></article>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <a routerLink="/admin/dishes" class="rounded-2xl bg-blue-600 p-5 font-black text-white shadow-sm hover:bg-blue-700">Manage Dishes</a>
+      <a routerLink="/admin/categories" class="rounded-2xl bg-white p-5 font-black text-slate-900 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50">Manage Categories</a>
+      <a routerLink="/admin/users" class="rounded-2xl bg-white p-5 font-black text-slate-900 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50">Manage Users</a>
+      <a routerLink="/admin/orders" class="rounded-2xl bg-white p-5 font-black text-slate-900 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50">Manage Orders</a>
+    </div>
+  }
+</div>

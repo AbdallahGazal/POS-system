@@ -1,0 +1,25 @@
+<section class="grid min-h-[calc(100dvh-4rem)] place-items-center px-4 py-10">
+  <form class="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm" (ngSubmit)="submit()">
+    <p class="text-sm font-black uppercase tracking-wide text-blue-600">Staff Login</p>
+    <h1 class="mt-2 text-3xl font-black text-slate-900">Access your workspace</h1>
+    <p class="mt-2 text-sm text-slate-500">Use your restaurant account to manage orders, kitchen workflow, or administration.</p>
+
+    <label class="mt-6 block text-sm font-bold text-slate-700">
+      Username
+      <input name="username" required [(ngModel)]="credentials.username" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
+    </label>
+
+    <label class="mt-4 block text-sm font-bold text-slate-700">
+      Password
+      <input name="password" type="password" required [(ngModel)]="credentials.password" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
+    </label>
+
+    @if (error()) {
+      <p class="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">{{ error() }}</p>
+    }
+
+    <button type="submit" [disabled]="loading()" class="mt-6 w-full rounded-xl bg-blue-600 px-5 py-3 font-black text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+      {{ loading() ? 'Signing in...' : 'Login' }}
+    </button>
+  </form>
+</section>

@@ -1,0 +1,46 @@
+<div>
+  <h1 class="text-3xl font-black text-slate-900">Manage Dishes</h1>
+
+  <form class="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:grid-cols-5" (ngSubmit)="save()">
+    <input name="name" required [ngModel]="form().name" (ngModelChange)="form.update(f => ({ ...f, name: $event }))" class="rounded-xl border border-slate-200 px-4 py-3 md:col-span-2" placeholder="Dish name" />
+    <input name="price" type="number" min="0" required [ngModel]="form().price" (ngModelChange)="form.update(f => ({ ...f, price: +$event }))" class="rounded-xl border border-slate-200 px-4 py-3" placeholder="Price" />
+    <select name="category" required [ngModel]="form().categoryId" (ngModelChange)="form.update(f => ({ ...f, categoryId: +$event }))" class="rounded-xl border border-slate-200 px-4 py-3">
+      @for (category of categories(); track category.id) {
+        <option [value]="category.id">{{ category.name }}</option>
+      }
+    </select>
+    <div class="flex gap-2">
+      <button type="submit" class="flex-1 rounded-xl bg-blue-600 px-4 py-3 font-black text-white hover:bg-blue-700">{{ editingId() ? 'Save' : 'Add' }}</button>
+      @if (editingId()) {
+        <button type="button" class="rounded-xl border border-slate-200 px-4 py-3 font-black" (click)="reset()">Cancel</button>
+      }
+    </div>
+  </form>
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    <select [ngModel]="activeFilter()" (ngModelChange)="activeFilter.set($event)" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold">
+      <option value="active">Active</option><option value="inactive">Inactive</option><option value="all">All</option>
+    </select>
+    <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event === 'null' ? null : +$event)" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold">
+      <option value="null">All categories</option>
+      @for (category of categories(); track category.id) { <option [value]="category.id">{{ category.name }}</option> }
+    </select>
+  </div>
+
+  <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    @for (dish of filteredDishes(); track dish.id) {
+      <div class="grid gap-3 border-b border-slate-100 p-4 md:grid-cols-[1fr_8rem_1fr_8rem_14rem] md:items-center">
+        <strong>{{ dish.name }}</strong>
+        <span>{{ dish.price | currency:'USD':'symbol':'1.2-2' }}</span>
+        <span class="text-sm font-semibold text-slate-500">{{ categoryName(dish.categoryId) }}</span>
+        <span [class]="dish.active ? 'text-sm font-black text-emerald-600' : 'text-sm font-black text-red-600'">{{ dish.active ? 'Active' : 'Inactive' }}</span>
+        <div class="flex gap-2">
+          <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="edit(dish)">Edit</button>
+          <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="toggleActive(dish)">{{ dish.active ? 'Deactivate' : 'Activate' }}</button>
+        </div>
+      </div>
+    } @empty {
+      <p class="p-6 text-slate-500">No dishes match these filters.</p>
+    }
+  </div>
+</div>

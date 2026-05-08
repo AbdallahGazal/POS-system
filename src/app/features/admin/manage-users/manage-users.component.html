@@ -1,0 +1,41 @@
+<div>
+  <h1 class="text-3xl font-black text-slate-900">Manage Users</h1>
+  <p class="mt-2 text-sm text-slate-500">Boss admin ID 1 can manage Admin accounts. Other admins can manage Cashier and Chef accounts only.</p>
+
+  <form class="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:grid-cols-4" (ngSubmit)="register()">
+    <input name="username" required [ngModel]="registerForm().username" (ngModelChange)="registerForm.update(form => ({ ...form, username: $event }))" class="rounded-xl border border-slate-200 px-4 py-3" placeholder="Username" />
+    <input name="password" type="password" required [ngModel]="registerForm().password" (ngModelChange)="registerForm.update(form => ({ ...form, password: $event }))" class="rounded-xl border border-slate-200 px-4 py-3" placeholder="Password" />
+    <select name="role" required [ngModel]="registerForm().role" (ngModelChange)="registerForm.update(form => ({ ...form, role: $event }))" class="rounded-xl border border-slate-200 px-4 py-3">
+      @for (role of roleOptions(); track role) { <option [value]="role">{{ role }}</option> }
+    </select>
+    <button class="rounded-xl bg-blue-600 px-5 py-3 font-black text-white hover:bg-blue-700">Register New User</button>
+  </form>
+
+  <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    @for (user of visibleUsers(); track user.id) {
+      <div class="grid gap-3 border-b border-slate-100 p-4 md:grid-cols-[5rem_1fr_8rem_20rem] md:items-center">
+        <span class="font-black text-slate-500">#{{ user.id }}</span>
+        @if (editingId() === user.id) {
+          <div class="grid gap-2 sm:grid-cols-2">
+            <input [ngModel]="editUsername()" (ngModelChange)="editUsername.set($event)" class="rounded-xl border border-slate-200 px-4 py-3" />
+            <input type="password" [ngModel]="editPassword()" (ngModelChange)="editPassword.set($event)" class="rounded-xl border border-slate-200 px-4 py-3" placeholder="New password optional" />
+          </div>
+        } @else {
+          <strong>{{ user.username }}</strong>
+        }
+        <span class="rounded-full bg-slate-100 px-3 py-1 text-center text-xs font-black text-slate-600">{{ user.role }}</span>
+        <div class="flex flex-wrap gap-2">
+          @if (editingId() === user.id) {
+            <button type="button" class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-bold text-white" (click)="save(user)">Save</button>
+            <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="editingId.set(null)">Cancel</button>
+          } @else if (canManage(user)) {
+            <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="startEdit(user)">Edit</button>
+            <button type="button" [disabled]="!canDelete(user)" class="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-600 disabled:cursor-not-allowed disabled:opacity-40" (click)="delete(user)">Delete</button>
+          }
+        </div>
+      </div>
+    } @empty {
+      <p class="p-6 text-slate-500">No manageable users found.</p>
+    }
+  </div>
+</div>

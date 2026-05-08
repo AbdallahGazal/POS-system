@@ -1,0 +1,31 @@
+<div>
+  <h1 class="text-3xl font-black text-slate-900">Manage Categories</h1>
+  <form class="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row" (ngSubmit)="create()">
+    <input name="name" required [ngModel]="newName()" (ngModelChange)="newName.set($event)" class="flex-1 rounded-xl border border-slate-200 px-4 py-3" placeholder="New category name" />
+    <button class="rounded-xl bg-blue-600 px-5 py-3 font-black text-white hover:bg-blue-700">Add New Category</button>
+  </form>
+  <select [ngModel]="activeFilter()" (ngModelChange)="activeFilter.set($event)" class="mt-6 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold">
+    <option value="active">Active</option><option value="inactive">Inactive</option><option value="all">All</option>
+  </select>
+  <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    @for (category of filteredCategories(); track category.id) {
+      <div class="grid gap-3 border-b border-slate-100 p-4 md:grid-cols-[1fr_8rem_16rem] md:items-center">
+        @if (editingId() === category.id) {
+          <input [ngModel]="editingName()" (ngModelChange)="editingName.set($event)" class="rounded-xl border border-slate-200 px-4 py-3" />
+        } @else {
+          <strong>{{ category.name }}</strong>
+        }
+        <span [class]="category.active ? 'text-sm font-black text-emerald-600' : 'text-sm font-black text-red-600'">{{ category.active ? 'Active' : 'Inactive' }}</span>
+        <div class="flex gap-2">
+          @if (editingId() === category.id) {
+            <button type="button" class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-bold text-white" (click)="saveName(category)">Save</button>
+            <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="editingId.set(null)">Cancel</button>
+          } @else {
+            <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="edit(category)">Edit</button>
+            <button type="button" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold" (click)="toggleActive(category)">{{ category.active ? 'Deactivate' : 'Activate' }}</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
