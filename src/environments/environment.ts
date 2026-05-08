@@ -1,5 +1,5 @@
 export const environment = {
-  baseUrl: 'http://jooe.runasp.net',
+  baseUrl: 'https://jooe.runasp.net',
   dishes: '/api/dishes',
   orders: '/api/orders',
   checkout: '/api/orders/checkout',
